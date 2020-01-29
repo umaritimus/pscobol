@@ -3,4 +3,11 @@
 ---
 fixtures:
   forge_modules:
-#     stdlib: "puppetlabs/stdlib"
+#   symlinks:
+#   my_module: "#{source_dir}"
+    powershell: 
+      repo: "puppetlabs/powershell"
+      ref: '3.0.1'
+    pwshlib: 
+      repo: "puppetlabs/pwshlib"
+      ref: '0.4.0'
