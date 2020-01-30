@@ -1,87 +1,78 @@
 # pscobol
 
-Welcome to your new module. A short overview of the generated parts can be found in the PDK documentation at https://puppet.com/pdk/latest/pdk_generating_modules.html .
-
-The README template below provides a starting point with details about what information to include in your README.
-
 #### Table of Contents
 
 1. [Description](#description)
 2. [Setup - The basics of getting started with pscobol](#setup)
-    * [What pscobol affects](#what-pscobol-affects)
     * [Setup requirements](#setup-requirements)
     * [Beginning with pscobol](#beginning-with-pscobol)
 3. [Usage - Configuration options and additional functionality](#usage)
 4. [Limitations - OS compatibility, etc.](#limitations)
 5. [Development - Guide for contributing to the module](#development)
+6. [Changelog](#changelog)
 
 ## Description
 
-Briefly tell users why they might want to use your module. Explain what your module does and what kind of problems users can solve with it.
-
-This should be a fairly short description helps the user decide if your module is what they want.
+This module adds resources capable of administering Micro Focus Visual Cobol installation, including installation and removal of
+Micro Focus Visual Cobol, installation of patches and registration of licenses.
 
 ## Setup
 
-### What pscobol affects **OPTIONAL**
-
-If it's obvious what your module touches, you can skip this section. For example, folks can probably figure out that your mysql_instance module affects their MySQL instances.
-
-If there's more that they should know about, though, this is the place to mention:
-
-* Files, packages, services, or operations that the module will alter, impact, or execute.
-* Dependencies that your module automatically installs.
-* Warnings or other important notices.
-
 ### Setup Requirements **OPTIONAL**
 
-If your module requires anything extra before setting up (pluginsync enabled, another module, etc.), mention it here.
+To use `pscobol` module on windows, powershell provider is required, as much of the code is written in powershell.  Depending on the version of your Windows operating system, you may be required to download and install, the following modules from the forge:
 
-If your most recent release breaks compatibility or requires particular steps for upgrading, you might want to include an additional "Upgrading" section here.
+* "puppetlabs/powershell"
+* "puppetlabs/pwshlib"
 
 ### Beginning with pscobol
 
-The very basic steps needed for a user to get the module up and running. This can include setup steps, if necessary, or it can be an example of the most basic use of the module.
+To start using the module, simply install the to your modulepath, e.g.
+
+```powershell
+puppet module install puppetlabs-powershell --modulepath <your module path>
+puppet module install puppetlabs-pwshlib    --modulepath <your module path>
+puppet module install umaritimus-pscobol    --modulepath <your module path>
+```
 
 ## Usage
 
-Include usage examples for common use cases in the **Usage** section. Show your users how to use your module to solve problems, and be sure to include code examples. Include three to five examples of the most important or common tasks a user can accomplish with your module. Show users how to accomplish more complex tasks that involve different types, classes, and functions working in tandem.
+Here's a complete example of installing Micro Focus Visual Cobol Built Tools, updating it with the patch and registering the license.
 
-## Reference
+We have the installer, patch and license file download to a `\\share\visualcobol` directory on windows.  We would like to install `Micro Focus Visual Cobol Built Tools` into `d:\cobol` location.
 
-This section is deprecated. Instead, add reference information to your code as Puppet Strings comments, and then use Strings to generate a REFERENCE.md in your module. For details on how to add code comments and generate documentation with Strings, see the Puppet Strings [documentation](https://puppet.com/docs/puppet/latest/puppet_strings.html) and [style guide](https://puppet.com/docs/puppet/latest/puppet_strings_style.html)
+We can register all these parameters in our hiera by adding these values into a yaml file within the data hierarchy:
 
-If you aren't ready to use Strings yet, manually create a REFERENCE.md in the root of your module directory and list out each of your module's classes, defined types, facts, functions, Puppet tasks, task plans, and resource types and providers, along with the parameters for each.
-
-For each element (class, defined type, function, and so on), list:
-
-  * The data type, if applicable.
-  * A description of what the element does.
-  * Valid values, if the data type doesn't make it obvious.
-  * Default value, if any.
-
-For example:
-
+```yaml
+---
+pscobol::microfocus::ensure: 'present'
+pscobol::microfocus::installdir: 'd:/cobol'
+pscobol::microfocus::installsource: '//share/visualcobol/vcbt_40.exe'
+pscobol::microfocus::patchsource: '//share/visualcobol/vcbt_40_pu04_196223.exe'
+pscobol::microfocus::licensesource: '//share/visualcobol/PS-VC-WIN-VSTUDIO.mflic'
 ```
-### `pet::cat`
 
-#### Parameters
+> **Note:**
+> * The paths are strings, written in the Unix path format.
+> * Parameters `ensure` and `installsource` are required.
+> * If `patchsource` is not specified, no patches will be applied.
+> * If `licensesource` is not specified, no licenses will be registered in the license manager.
+> * If `installdir` is not specified, the installation target will default to the `Program Files` location,e.g. `'C:\Program Files (x86)\Micro Focus\Visual COBOL'`
 
-##### `meow`
 
-Enables vocalization in your cat. Valid options: 'string'.
-
-Default: 'medium-loud'.
-```
+To uninstall Micro Focus Visual Cobol, simply replace the ensure value of `'present'` by `'absent'`
 
 ## Limitations
 
-In the Limitations section, list any incompatibilities, known issues, or other warnings.
+* Module `pscobol` was only tested for deployment of `Micro Focus Visual Cobol Built Tools`, but should work for others...
+* It is known to work on `Microsoft Windows 2019` server platform, but should work on `Microsoft Windows 2016` and `Mirosoft Windows 10`
 
 ## Development
 
-In the Development section, tell other users the ground rules for contributing to your project and how they should submit their work.
+* Module `pscobol` was developed using `PDK 1.15` on Windows OS.
+* It's released under an open MIT license. So, please feel free ot use it freely.
+* Please do send the Pull Requests to add functionality for other platforms.
 
-## Release Notes/Contributors/Etc. **Optional**
+## Changelog
 
-If you aren't using changelog, put your release notes here (though you should consider using changelog). You can also add any additional sections you feel are necessary or important to include here. Please use the `## ` header.
+For updates please see the [changelog](/CHANGELOG.md)
