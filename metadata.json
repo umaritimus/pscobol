@@ -1,13 +1,11 @@
 {
   "name": "umaritimus-pscobol",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "umaritimus",
   "summary": "",
   "license": "Apache-2.0",
   "source": "",
-  "dependencies": [
-
-  ],
+  "dependencies": [],
   "operatingsystem_support": [
     {
       "operatingsystem": "CentOS",

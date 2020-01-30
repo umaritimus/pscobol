@@ -5,10 +5,10 @@
 #   Standard puppet ensure, e.g. present, absent, installed, etc
 #
 # @param installdir
-#   Location where Microfocus Visual Cobol is installed
+#   Location where Micro Focus Visual Cobol is installed
 #
 # @param source
-#   Build Tools installer location
+#   Micro Focus Visual Cobol installer location
 #
 # @example
 #   include pscobol::microfocus::update
@@ -19,48 +19,55 @@ class pscobol::microfocus::update (
 ) {
   debug ("Ensure 'pscobol::microfocus::update' to be '${ensure}' using '${source}' on '${installdir}'")
 
-  exec { 'Verify Update source' :
-    command   => Sensitive(@("EOT")),
-        Try {
-          If (Test-Path -Path ${regsubst($source, '(/|\\\\)', '\\', 'G')}) {
-            Exit 0
+  if ($facts['operatingsystem'] == 'windows') {
+
+    exec { 'Verify Update source' :
+      command   => Sensitive(@("EOT")),
+          Try {
+            If (Test-Path -Path ${regsubst("\'${source}\'", '(/|\\\\)', '\\', 'G')}) {
+              Exit 0
+            }
+            Exit 1
+          } Catch {
+            Exit 1
           }
-          Exit 1
-        } Catch {
-          Exit 1
-        }
-        |-EOT
-    provider  => powershell,
-    logoutput => true,
-    onlyif    => "If ('${source}' -ne '') { Exit 0 } Else { Exit 1 }"
-  }
-
-  if ($ensure == 'present') {
-    debug ("Updating 'Microfocus Micro Focus Visual COBOL' using ${source}")
-
-    exec { 'Update Microfocus Micro Focus Visual COBOL' :
-      command   => Sensitive("
-        ${file('pscobol/pscobol.psm1')}
-        Install-MicroFocusVisualCobol `
-          -Source ${regsubst($source, '(/|\\\\)', '\\', 'G')} `
-          -InstallDir ${regsubst($installdir, '(/|\\\\)', '\\', 'G')}
-      "),
+          |-EOT
       provider  => powershell,
       logoutput => true,
-      onlyif   => Sensitive(@("EOT")),
-        Try {
-          If ('${source}' -ne '') {
-            If (Test-Path -Path ${regsubst("${installdir}/bin/cobol.exe", '(/|\\\\)', '\\', 'G')}) {
-              Exit 0
-            } 
-          }
-          Exit 1
-        } Catch {
-          Exit 1
-        }
-        |-EOT
+      onlyif    => "If ('${source}' -ne '') { Exit 0 } Else { Exit 1 }"
     }
+
+    if ($ensure == 'present') {
+      debug ("Updating 'Microfocus Micro Focus Visual COBOL' using '${source}''")
+
+      exec { 'Update Microfocus Micro Focus Visual COBOL' :
+        command   => Sensitive("
+          ${file('pscobol/pscobol.psm1')}
+          Install-MicroFocusVisualCobol `
+            -Source ${regsubst("\'${source}\'", '(/|\\\\)', '\\', 'G')} `
+            -InstallDir ${regsubst("\'${installdir}\'", '(/|\\\\)', '\\', 'G')}
+        "),
+        provider  => powershell,
+        logoutput => true,
+        require   => Exec['Verify Update source'],
+        onlyif    => Sensitive(@("EOT")),
+          Try {
+            If ('${source}' -ne '') {
+              If (Test-Path -Path ${regsubst("\'${installdir}/bin/cobol.exe\'", '(/|\\\\)', '\\', 'G')}) {
+                Exit 0
+              } 
+            }
+            Exit 1
+          } Catch {
+            Exit 1
+          }
+          |-EOT
+      }
+    } else {
+      debug ("No-Op 'Microfocus Micro Focus Visual COBOL' using '${source}'")
+    }
+
   } else {
-    debug ("No-Op 'Microfocus Micro Focus Visual COBOL' using ${source}")
+    warning ('Only Windows OS is supported at this point. Please PR!')
   }
 }

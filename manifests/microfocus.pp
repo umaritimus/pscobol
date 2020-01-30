@@ -23,25 +23,20 @@ class pscobol::microfocus  (
 ) {
   debug ("Ensure 'pscobol::microfocus' to be '${ensure}' in '${installdir}'")
 
-  if ($facts['operatingsystem'] == 'windows') {
-
-    class { 'pscobol::microfocus::install':
-      ensure     => $ensure,
-      installdir => $installdir,
-      source     => $installsource,
-    }
-
-    class { 'pscobol::microfocus::update':
-      ensure     => $ensure,
-      installdir => $installdir,
-      source     => $patchsource,
-      require    => Class['pscobol::microfocus::install'],
-    }
-
-    contain 'pscobol::microfocus::install'
-    contain 'pscobol::microfocus::update'
-
-  } else {
-    warning ('Only Windows OS is supported at this point. Please PR!')
+  class { 'pscobol::microfocus::install':
+    ensure     => $ensure,
+    installdir => $installdir,
+    source     => $installsource,
   }
+
+  class { 'pscobol::microfocus::update':
+    ensure     => $ensure,
+    installdir => $installdir,
+    source     => $patchsource,
+    require    => Class['pscobol::microfocus::install'],
+  }
+
+  contain 'pscobol::microfocus::install'
+  contain 'pscobol::microfocus::update'
+
 }
