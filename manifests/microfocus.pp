@@ -20,6 +20,7 @@ class pscobol::microfocus  (
   String $installdir = 'C:/Program Files (x86)/Micro Focus/Visual COBOL',
   String $installsource = '//share/visualcobol/vcbt_40.exe',
   String $patchsource = '',
+  String $licensesource = '',
 ) {
   debug ("Ensure 'pscobol::microfocus' to be '${ensure}' in '${installdir}'")
 
@@ -36,7 +37,14 @@ class pscobol::microfocus  (
     require    => Class['pscobol::microfocus::install'],
   }
 
+  class { 'pscobol::microfocus::license':
+    ensure  => $ensure,
+    source  => $licensesource,
+    require => Class['pscobol::microfocus::update'],
+  }
+
   contain 'pscobol::microfocus::install'
   contain 'pscobol::microfocus::update'
+  contain 'pscobol::microfocus::license'
 
 }

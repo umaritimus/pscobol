@@ -99,3 +99,63 @@ Function Uninstall-MicroFocusVisualCobol {
         }
     }
 }
+
+Function Set-MicroFocusVisualCobolLicense {
+    [CmdletBinding()]
+    Param (
+        [Parameter(
+            Mandatory = $True,
+            HelpMessage = "Location of 'Sentinel RMS License Manager'"
+        )]
+        [String] ${CesAdminToolPath},
+        [Parameter(
+            Mandatory = $True,
+            HelpMessage = "Source Directory for MicroFocus Visual Cobol license file"
+        )]
+        [String] ${Source}
+    )
+
+    Begin {
+        ${ComputerName} = (Get-WmiObject Win32_Computersystem).Name.toLower()
+    }
+
+    Process {
+        Try {
+            ${LogFile} = "${Env:Temp}\vcbt_license.log"
+
+            If (Test-Path -Path "${LogFile}") {
+                Remove-Item -Path "${LogFile}" -Force
+            }
+
+            ${InstallExitCode} = (
+                Start-Process `
+                    -FilePath "${CesAdminToolPath}" `
+                    -ArgumentList ( "-term install", "-f ${Source}" ) `
+                    -Wait `
+                    -NoNewWindow `
+                    -PassThru
+            ).ExitCode
+
+            If (${InstallExitCode} -eq 0) {
+
+                ${ListExitCode} = (
+                    Start-Process `
+                        -FilePath "${CesAdminToolPath}" `
+                        -ArgumentList ( "-term list" ) `
+                        -Wait `
+                        -NoNewWindow `
+                        -RedirectStandardOutput "${LogFile}" `
+                        -PassThru
+                ).ExitCode
+                
+                If ((${ListExitCode} -eq 0) -and (Select-String -Path "${LogFile}" -Pattern "Feature" -Quiet -ErrorAction Stop)) {
+                    Exit 0
+                }
+            }
+
+            Exit 1
+        } Catch {
+            Throw "Licensing of 'Micro Focus Visual COBOL Build Tools' failed"
+        }
+    }
+}
