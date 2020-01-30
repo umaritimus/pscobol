@@ -155,7 +155,7 @@ Function Set-MicroFocusVisualCobolLicense {
 
             Exit 1
         } Catch {
-            Throw "Licensing of 'Micro Focus Visual COBOL Build Tools' failed"
+            Throw "Licensing of 'Micro Focus Visual COBOL' failed"
         }
     }
 }

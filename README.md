@@ -75,4 +75,4 @@ To uninstall Micro Focus Visual Cobol, simply replace the ensure value of `'pres
 
 ## Changelog
 
-For updates please see the [changelog](/CHANGELOG.md)
+For updates please see the [changelog](https://github.com/umaritimus/pscobol/blob/master/CHANGELOG.md)

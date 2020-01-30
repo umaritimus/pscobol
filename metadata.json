@@ -1,10 +1,12 @@
 {
   "name": "umaritimus-pscobol",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "author": "umaritimus",
   "summary": "Puppet module for administering Micro Focus Visual Cobol for PeopleSoft systems",
   "license": "MIT",
   "source": "https://github.com/umaritimus/pscobol",
+  "project_page": "https://github.com/umaritimus/pscobol",
+  "issues_url": "https://github.com/umaritimus/pscobol",
   "dependencies": [
     {
       "name": "puppetlabs/powershell",
@@ -16,30 +18,6 @@
     }
   ],
   "operatingsystem_support": [
-    {
-      "operatingsystem": "CentOS",
-      "operatingsystemrelease": [
-        "7"
-      ]
-    },
-    {
-      "operatingsystem": "OracleLinux",
-      "operatingsystemrelease": [
-        "7"
-      ]
-    },
-    {
-      "operatingsystem": "RedHat",
-      "operatingsystemrelease": [
-        "8"
-      ]
-    },
-    {
-      "operatingsystem": "Scientific",
-      "operatingsystemrelease": [
-        "7"
-      ]
-    },
     {
       "operatingsystem": "windows",
       "operatingsystemrelease": [
