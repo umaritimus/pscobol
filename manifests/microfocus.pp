@@ -16,35 +16,43 @@
 # @example
 #   include pscobol::microfocus
 class pscobol::microfocus  (
-  Enum['present','absent'] $ensure = 'absent',
-  String $installdir = 'C:/Program Files (x86)/Micro Focus/Visual COBOL',
-  String $installsource = '//share/visualcobol/vcbt_40.exe',
-  String $patchsource = '',
-  String $licensesource = '',
-) {
+  Enum['present','absent']        $ensure            = $pscobol::params::ensure,
+  Optional[String]                $installdir        = $pscobol::params::installdir,
+  Optional[String]                $package           = $pscobol::params::package,
+  Optional[Array[String[1]]]      $patches           = $pscobol::params::patches,
+  Optional[String]                $license           = $pscobol::params::license,
+) inherits pscobol::params {
+
   debug ("Ensure 'pscobol::microfocus' to be '${ensure}' in '${installdir}'")
+
+  $lmpath = $pscobol::params::lmpath
 
   class { 'pscobol::microfocus::install':
     ensure     => $ensure,
     installdir => $installdir,
-    source     => $installsource,
+    package    => $package,
   }
 
   class { 'pscobol::microfocus::update':
     ensure     => $ensure,
     installdir => $installdir,
-    source     => $patchsource,
-    require    => Class['pscobol::microfocus::install'],
+    patches    => $patches,
   }
 
   class { 'pscobol::microfocus::license':
     ensure  => $ensure,
-    source  => $licensesource,
-    require => Class['pscobol::microfocus::update'],
+    license => $license,
+    lmpath  => $lmpath,
   }
 
   contain 'pscobol::microfocus::install'
   contain 'pscobol::microfocus::update'
   contain 'pscobol::microfocus::license'
+
+  if ($ensure == 'present') {
+    Class['pscobol::microfocus::install'] -> Class['pscobol::microfocus::update'] -> Class['pscobol::microfocus::license']
+  } else {
+    Class['pscobol::microfocus::license'] -> Class['pscobol::microfocus::install']
+  }
 
 }

@@ -1,32 +1,23 @@
-# @summary Installs Micro Focus Visual Cobol
-#   Installs Micro Focus Visual Cobol
-#
-# @param ensure
-#   Standard puppet ensure, e.g. present, absent, installed, etc
-#
-# @param installdir
-#   Location where Micro Focus Visual Cobol is installed
-#
-# @param source
-#   Micro Focus Visual Cobol installer location
+# @summary
+#   Private class for Micro Focus Visual Cobol installation
 #
 # @example
 #   include pscobol::microfocus::install
-class pscobol::microfocus::install  (
-  Enum['present','absent'] $ensure = 'absent',
-  String $installdir = 'C:/Program Files (x86)/Micro Focus/Visual COBOL',
-  String $source = '//share/visualcobol/vcbt_40.exe',
+class pscobol::microfocus::install (
+  $ensure       = undef,
+  $installdir   = undef,
+  $package      = undef,
 ) {
-  debug ("Ensure 'pscobol::microfocus::install' to be '${ensure}' using '${source}' on '${installdir}'")
+
+
+  debug ("Ensure 'pscobol::microfocus::install' to be '${ensure}' using '${package}' on '${installdir}'")
 
   if ($facts['operatingsystem'] == 'windows') {
-
-    $lmpath = 'C:/Program Files (x86)/Common Files/SafeNet Sentinel/Sentinel RMS License Manager/WinNT/CesAdminTool.exe'
 
     exec { 'Verify Installation source' :
       command   => Sensitive(@("EOT")),
           Try {
-            If ( Test-Path -Path ${regsubst("\'${source}\'", '(/|\\\\)', '\\', 'G')} ) {
+            If ( Test-Path -Path ${regsubst("\'${package}\'", '(/|\\\\)', '\\', 'G')} ) {
               Exit 0
             }
             Exit 1
@@ -36,31 +27,33 @@ class pscobol::microfocus::install  (
           |-EOT
       provider  => powershell,
       logoutput => true,
+      onlyif    => "If ('${package}' -ne '') { Exit 0 } Else { Exit 1 }"
     }
 
     if ($ensure == 'present') {
-      debug ("Installing 'Microfocus Micro Focus Visual COBOL' using '${source}'")
+      debug ("Installing 'Microfocus Micro Focus Visual COBOL' using '${package}'")
 
       exec { 'Install Microfocus Micro Focus Visual COBOL' :
         command   => Sensitive("
           ${file('pscobol/pscobol.psm1')}
           Install-MicroFocusVisualCobol `
-            -Source ${regsubst("\'${source}\'", '(/|\\\\)', '\\', 'G')} `
+            -Source ${regsubst("\'${package}\'", '(/|\\\\)', '\\', 'G')} `
             -InstallDir ${regsubst("\'${installdir}\'", '(/|\\\\)', '\\', 'G')}
         "),
         provider  => powershell,
         logoutput => true,
         require   => Exec['Verify Installation source'],
-        creates   => ["${installdir}/bin/cobol.exe", $lmpath],
+        creates   => ["${installdir}/bin/cobol.exe"],
+        onlyif    => "If ('${package}' -ne '') { Exit 0 } Else { Exit 1 }"
       }
     } else {
-      debug ("Removing 'Microfocus Micro Focus Visual COBOL' using '${source}'")
+      debug ("Removing 'Microfocus Micro Focus Visual COBOL' using '${package}'")
 
       exec { 'Remove Microfocus Micro Focus Visual COBOL' :
         command   => Sensitive("
           ${file('pscobol/pscobol.psm1')}
           Uninstall-MicroFocusVisualCobol `
-            -Source ${regsubst("\'${source}\'", '(/|\\\\)', '\\', 'G')} `
+            -Source ${regsubst("\'${package}\'", '(/|\\\\)', '\\', 'G')} `
             -InstallDir ${regsubst("\'${installdir}\'", '(/|\\\\)', '\\', 'G')}
         "),
         provider  => powershell,
@@ -68,35 +61,20 @@ class pscobol::microfocus::install  (
         require   => Exec['Verify Installation source'],
         onlyif    => Sensitive(@("EOT")),
           Try {
-            If ( Test-Path -Path ${regsubst("\'${installdir}/bin/cobol.exe\'", '(/|\\\\)', '\\', 'G')} ) {
-              Exit 0
+            If ('${package}' -ne '') {
+              If (Test-Path -Path ${regsubst("\'${installdir}/bin/cobol.exe\'", '(/|\\\\)', '\\', 'G')}) {
+                Exit 0
+              }
             }
             Exit 1
           } Catch {
             Exit 1
           }
           |-EOT
-      }
-
-      exec { 'Remove Sentinel RMS License Manager' :
-        command   => Sensitive('cmd /c "MsiExec.exe/X{A6C99F57-4EAE-4A25-898D-EFD9AF3DA23D} /quiet"'),
-        provider  => powershell,
-        logoutput => true,
-        onlyif    => Sensitive(@("EOT")),
-          Try {
-            If ( Test-Path -Path ${regsubst("\'${lmpath}\'", '(/|\\\\)', '\\', 'G')} ) {
-              Exit 0
-            }
-            Exit 1
-          } Catch {
-            Exit 1
-          }
-          |-EOT
-        require   => Exec['Remove Microfocus Micro Focus Visual COBOL'],
       }
     }
 
   } else {
-    warning ('Only Windows OS is supported at this point. Please PR!')
+    fail("Unsupported Platform - ${$facts['operatingsystem']}")
   }
 }

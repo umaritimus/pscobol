@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 0.5.0
+
+**Features**
+
+* WARNING: Breaking changes - changed parameter names and types
+* Added default base class and parameters
+* Major code refactoring
+
+**Bugfixes**
+
+**Known Issues**
+
+* Only works on `Windows`
+
 ## Release 0.4.0
 
 **Features**

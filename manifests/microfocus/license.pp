@@ -1,26 +1,22 @@
-# @summary Registers the Micro Focus Visual Cobol license
-#   Registers the Micro Focus Visual Cobol license
-#
-# @param ensure
-#   Standard puppet ensure, e.g. present, absent, installed, etc
-#
-# @param source
-#   Micro Focus mflic license file location
+# @summary
+#   Private class to register the Micro Focus Visual Cobol license
 #
 # @example
 #   include pscobol::microfocus::license
 class pscobol::microfocus::license (
-  Enum['present','absent'] $ensure = 'absent',
-  String $source = '//share/visualcobol/PS-VC-WIN-VSTUDIO.mflic',
-){
-  debug ("Ensure 'pscobol::microfocus::license' to be '${ensure}' using '${source}'")
+  $ensure    = undef,
+  $license   = undef,
+  $lmpath    = undef,
+) {
+
+  debug ("Ensure 'pscobol::microfocus::license' to be '${ensure}' using '${license}'")
 
   if ($facts['operatingsystem'] == 'windows') {
 
     exec { 'Verify License source' :
       command   => Sensitive(@("EOT")),
           Try {
-            If ( Test-Path -Path ${regsubst("\'${source}\'", '(/|\\\\)', '\\', 'G')} ) {
+            If ( Test-Path -Path ${regsubst("\'${license}\'", '(/|\\\\)', '\\', 'G')} ) {
               Exit 0
             }
             Exit 1
@@ -30,18 +26,16 @@ class pscobol::microfocus::license (
           |-EOT
       provider  => powershell,
       logoutput => true,
-      onlyif    => "If ('${source}' -ne '') { Exit 0 } Else { Exit 1 }"
+      onlyif    => "If ('${license}' -ne '') { Exit 0 } Else { Exit 1 }"
     }
 
     if ($ensure == 'present') {
-
-      $lmpath = 'C:/Program Files (x86)/Common Files/SafeNet Sentinel/Sentinel RMS License Manager/WinNT/CesAdminTool.exe'
 
       exec { 'License Micro Focus Visual COBOL' :
         command   => Sensitive("
           ${file('pscobol/pscobol.psm1')}
           Set-MicroFocusVisualCobolLicense `
-            -Source ${regsubst("\'${source}\'", '(/|\\\\)', '\\', 'G')} `
+            -Source ${regsubst("\'${license}\'", '(/|\\\\)', '\\', 'G')} `
             -CesAdminToolPath ${regsubst("\'${lmpath}\'", '(/|\\\\)', '\\', 'G')}
         "),
         provider  => powershell,
@@ -49,7 +43,7 @@ class pscobol::microfocus::license (
         require   => Exec['Verify License source'],
         onlyif    => Sensitive(@("EOT")),
           Try {
-            If ('${source}' -ne '') {
+            If ('${license}' -ne '') {
               If ( Test-Path -Path ${regsubst("\'${lmpath}\'", '(/|\\\\)', '\\', 'G')} ) {
                 Exit 0
               } 
@@ -62,10 +56,24 @@ class pscobol::microfocus::license (
       }
 
     } else {
-      debug ("No-Op 'Microfocus Micro Focus Visual COBOL' using '${source}'")
+      exec { 'Remove Sentinel RMS License Manager' :
+        command   => Sensitive('cmd /c "MsiExec.exe/X{A6C99F57-4EAE-4A25-898D-EFD9AF3DA23D} /quiet"'),
+        provider  => powershell,
+        logoutput => true,
+        onlyif    => Sensitive(@("EOT")),
+          Try {
+            If ( Test-Path -Path ${regsubst("\'${lmpath}\'", '(/|\\\\)', '\\', 'G')} ) {
+              Exit 0
+            }
+            Exit 1
+          } Catch {
+            Exit 1
+          }
+          |-EOT
+      }
     }
 
   } else {
-    warning ('Only Windows OS is supported at this point. Please PR!')
+    fail("Unsupported Platform - ${$facts['operatingsystem']}")
   }
 }

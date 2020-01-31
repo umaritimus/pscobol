@@ -39,26 +39,25 @@ puppet module install umaritimus-pscobol    --modulepath <your module path>
 
 Here's a complete example of installing Micro Focus Visual Cobol Built Tools, updating it with the patch and registering the license.
 
-We have the installer, patch and license file download to a `\\share\visualcobol` directory on windows.  We would like to install `Micro Focus Visual Cobol Built Tools` into `d:\cobol` location.
+We have the installer, patch and license file download to a `\\share` directory on windows.  We would like to install `Micro Focus Visual Cobol Built Tools` into `d:\cobol` location.
 
 We can register all these parameters in our hiera by adding these values into a yaml file within the data hierarchy:
 
 ```yaml
 ---
-pscobol::microfocus::ensure: 'present'
-pscobol::microfocus::installdir: 'd:/cobol'
-pscobol::microfocus::installsource: '//share/visualcobol/vcbt_40.exe'
-pscobol::microfocus::patchsource: '//share/visualcobol/vcbt_40_pu04_196223.exe'
-pscobol::microfocus::licensesource: '//share/visualcobol/PS-VC-WIN-VSTUDIO.mflic'
+pscobol::ensure:        'present'
+pscobol::installdir:    'd:/cobol'
+pscobol::package:       '//share/vcbt_40.exe'
+pscobol::patches:       ['//share/vcbt_40_pu04_196223.exe']
+pscobol::license:       '//share/PS-VC-WIN-VSTUDIO.mflic'
 ```
 
 > **Note:**
 > * The paths are strings, written in the Unix path format.
-> * Parameters `ensure` and `installsource` are required.
-> * If `patchsource` is not specified, no patches will be applied.
-> * If `licensesource` is not specified, no licenses will be registered in the license manager.
+> * Parameters `ensure` and `package` are required.
+> * If `patches` is not specified, no patches will be applied. It's an array, so multiple patches could be specified.
+> * If `license` is not specified, no licenses will be registered in the license manager.
 > * If `installdir` is not specified, the installation target will default to the `Program Files` location,e.g. `'C:\Program Files (x86)\Micro Focus\Visual COBOL'`
-
 
 To uninstall Micro Focus Visual Cobol, simply replace the ensure value of `'present'` by `'absent'`
 
@@ -66,6 +65,7 @@ To uninstall Micro Focus Visual Cobol, simply replace the ensure value of `'pres
 
 * Module `pscobol` was only tested for deployment of `Micro Focus Visual Cobol Built Tools`, but should work for others...
 * It is known to work on `Microsoft Windows 2019` server platform, but should work on `Microsoft Windows 2016` and `Mirosoft Windows 10`
+* This module was only tested on `Puppet 5.5.*`
 
 ## Development
 
