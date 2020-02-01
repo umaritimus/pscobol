@@ -1,12 +1,15 @@
-# @summary A short summary of the purpose of this class
-#
-# A description of what this class does
+# @summary
+#   Private class for Micro Focus Visual Cobol module
+#   that defines default parameters
 #
 # @example
 #   include pscobol::params
 class pscobol::params {
 
   $ensure         = 'present'
+  $ps_home        =  undef
+  $ps_app_home    =  undef
+  $ps_cust_home   =  undef
 
   case $facts['operatingsystem'] {
     'windows': {

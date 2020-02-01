@@ -14,7 +14,7 @@
 ## Description
 
 This module adds resources capable of administering Micro Focus Visual Cobol installation, including installation and removal of
-Micro Focus Visual Cobol, installation of patches and registration of licenses.
+Micro Focus Visual Cobol, installation of patches and registration of licenses.  It also provides capability to compile PeopleSoft Cobol.
 
 ## Setup
 
@@ -52,9 +52,16 @@ pscobol::patches:       ['//share/vcbt_40_pu04_196223.exe']
 pscobol::license:       '//share/PS-VC-WIN-VSTUDIO.mflic'
 ```
 
+The module could also be called from a command line.  Here's the example of compiling cobol in PS_HOME and PS_APP_HOME.  The PS_APP_HOME is already defined in the environment, but we would like to use a compiled routine from a newly upgraded PS_HOME.  The Visual Cobol compiler is installed in `d:\cobol` in this example:
+
+```powershell
+puppet apply --modulepath <your module path> -e "class { 'pscobol' : ensure => 'present', targets => ['PS_HOME','PS_APP_HOME'] , installdir => 'd:/cobol', ps_home => 'd:/oracle/product/psft/pt/8.57.12' , }"
+```
+
 > **Note:**
 > * The paths are strings, written in the Unix path format.
 > * Parameters `ensure` and `package` are required.
+> * Parameters `ps_home`, `ps_app_home` and `ps_cust_home` are only required when overwriting predefined environment variables.
 > * If `patches` is not specified, no patches will be applied. It's an array, so multiple patches could be specified.
 > * If `license` is not specified, no licenses will be registered in the license manager.
 > * If `installdir` is not specified, the installation target will default to the `Program Files` location,e.g. `'C:\Program Files (x86)\Micro Focus\Visual COBOL'`

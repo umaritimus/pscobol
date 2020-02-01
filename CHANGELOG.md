@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.0.1
+
+**Features**
+
+* Compiles cobol on a PeopleSoft target
+
+**Bugfixes**
+
+**Known Issues**
+
+* Only works on `Windows`
+* So far only `PS_HOME` cobol is tested.  Needs additional refactoring and fixups.
+
 ## Release 0.5.0
 
 **Features**
