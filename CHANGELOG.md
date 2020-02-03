@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.0.2
+
+**Features**
+
+* Included additional and clarified existing examples
+* Included additional debug statements and fixed class reference
+
+**Bugfixes**
+
+**Known Issues**
+
+* Only works on `Windows`
+* So far only `PS_HOME` cobol is tested.
+
 ## Release 1.0.1
 
 **Features**

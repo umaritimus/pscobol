@@ -68,6 +68,8 @@ puppet apply --modulepath <your module path> -e "class { 'pscobol' : ensure => '
 
 To uninstall Micro Focus Visual Cobol, simply replace the ensure value of `'present'` by `'absent'`
 
+For additional usage, please see [/examples/ in the source repository](https://github.com/umaritimus/pscobol/blob/master/examples)
+
 ## Limitations
 
 * Module `pscobol` was only tested for deployment of `Micro Focus Visual Cobol Built Tools`, but should work for others...

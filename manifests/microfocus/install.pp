@@ -9,7 +9,6 @@ class pscobol::microfocus::install (
   $package      = undef,
 ) {
 
-
   debug ("Ensure 'pscobol::microfocus::install' to be '${ensure}' using '${package}' on '${installdir}'")
 
   if ($facts['operatingsystem'] == 'windows') {

@@ -12,9 +12,13 @@ class pscobol::peoplesoft::compile (
   $targets           =  undef,
 ) {
 
+  debug ("Ensure 'pscobol::peoplesoft::compile' to be '${ensure}' using '${installdir}' on '${targets}'")
+
   if ($facts['operatingsystem'] == 'windows') {
     if ($targets and ($ensure == 'present')) {
       $targets.each | String $target | {
+
+        debug ("Compiling '${target}' cobol using '${installdir}'")
 
         exec { "Compile ${target} cobol" :
           command   => Sensitive("
