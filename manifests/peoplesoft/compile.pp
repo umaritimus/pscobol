@@ -33,6 +33,25 @@ class pscobol::peoplesoft::compile (
         logoutput => true,
       }
 
+      exec { 'Verify COBDIR/bin/cobol.exe Path' :
+        command   => Sensitive(@("EOT")),
+          If ('${installdir}' -ne '') {
+            If (-not (Test-Path -Path ${regsubst("\'${installdir}/bin/cobol.exe\'", '(/|\\\\)', '\\', 'G')} -ErrorAction Stop)) {
+              Throw "Path for ${regsubst("\'${installdir}/bin/cobol.exe\'", '(/|\\\\)', '\\', 'G')} is invalid"
+            }
+          } Else {
+            If (-not ([System.Environment]::GetEnvironmentVariable('COBDIR'))) {
+              Throw "Environment Variable 'COBDIR' is not defined"
+            }
+            If (-not (Test-Path -Path "$([System.Environment]::GetEnvironmentVariable('COBDIR'))\\bin\\cobol.exe")) {
+              Throw "Path for 'COBDIR/bin/cobol.exe' is invalid"
+            }
+          }
+          |- EOT
+        provider  => powershell,
+        logoutput => true,
+      }
+
       $targets.each | String $target | {
 
         debug ("Compiling '${target}' cobol using '${installdir}'")
@@ -109,7 +128,7 @@ class pscobol::peoplesoft::compile (
           "),
           provider  => powershell,
           logoutput => true,
-          require   => Exec['Verify PS_HOME/setup Path', "Verify ${target}/src/cbl Path"],
+          require   => Exec['Verify PS_HOME/setup Path', 'Verify COBDIR/bin/cobol.exe Path', "Verify ${target}/src/cbl Path"],
           onlyif    => Sensitive(@("EOT")),
             Try {
               If ('${target}' -ne '') {

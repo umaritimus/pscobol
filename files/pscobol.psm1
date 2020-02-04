@@ -164,10 +164,10 @@ Function Invoke-CobolCompile {
     [CmdletBinding()]
     Param (
         [Parameter(
-            Mandatory = $True,
+            Mandatory = $False,
             HelpMessage = "Location of 'Micro Focus Visual Cobol'"
         )]
-        [String] ${cobroot},
+        [String] ${cobroot} = ${Env:COBROOT},
         [Parameter(
             Mandatory = $False,
             HelpMessage = "Location of 'PeopleSoft PeopleTools Home (PS_HOME)'"
@@ -196,11 +196,13 @@ Function Invoke-CobolCompile {
 
     Process {
         Try {
-            ${Env:COBROOT} = "${cobroot}"
+            # If COBROOT, PS_HOME, PS_APP_HOME and PS_CUST_HOME passed as optional 
+            # parameters, assume that these are the targets, so overwrite local 
+            # environment variables with their parameter equivalents.
+            If (${cobroot}) {
+                ${Env:COBROOT} = "${cobroot}"
+            }
 
-            # If PS_HOME, PS_APP_HOME and PS_CUST_HOME passed as optional parameters,
-            # assume that these are the targets, so overwrite local environment
-            # variables with their parameter equivalents.
             If (${ps_home}) {
                 ${Env:PS_HOME} = ${ps_home}
             }
