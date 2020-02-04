@@ -201,15 +201,15 @@ Function Invoke-CobolCompile {
             # If PS_HOME, PS_APP_HOME and PS_CUST_HOME passed as optional parameters,
             # assume that these are the targets, so overwrite local environment
             # variables with their parameter equivalents.
-            If (${ps_home} -ne ${Env:PS_HOME}) {
+            If (${ps_home}) {
                 ${Env:PS_HOME} = ${ps_home}
             }
 
-            If (${ps_app_home} -ne ${Env:PS_APP_HOME}) {
+            If (${ps_app_home}) {
                 ${Env:PS_APP_HOME} = ${ps_app_home}
             }
 
-            If (${ps_cust_home} -ne ${Env:PS_CUST_HOME}) {
+            If (${ps_cust_home}) {
                 ${Env:PS_CUST_HOME} = ${ps_cust_home}
             }
 

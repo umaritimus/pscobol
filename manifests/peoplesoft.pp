@@ -31,8 +31,8 @@ class pscobol::peoplesoft (
     ensure       => $ensure,
     installdir   => $installdir,
     ps_home      => $ps_home,
-    ps_app_home  => $ps_home,
-    ps_cust_home => $ps_home,
+    ps_app_home  => $ps_app_home,
+    ps_cust_home => $ps_cust_home,
     targets      => $targets,
   }
 

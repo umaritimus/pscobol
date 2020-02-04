@@ -18,7 +18,7 @@ Micro Focus Visual Cobol, installation of patches and registration of licenses. 
 
 ## Setup
 
-### Setup Requirements **OPTIONAL**
+### Setup Requirements
 
 To use `pscobol` module on windows, powershell provider is required, as much of the code is written in powershell.  Depending on the version of your Windows operating system, you may be required to download and install, the following modules from the forge:
 

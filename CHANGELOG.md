@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.0.3
+
+**Features**
+
+* Fixups to code
+* Additional parameter verification and error checking
+
+**Bugfixes**
+
+**Known Issues**
+
+* Only works on `Windows`
+* Does not compile INAS cobol for PeopleSoft Campus Solutions (yet)
+
 ## Release 1.0.2
 
 **Features**

@@ -13,7 +13,7 @@ class pscobol::microfocus::update (
 
   if ($facts['operatingsystem'] == 'windows') {
 
-    if (($patches) and ($ensure == 'present')) {
+    if (!empty($patches) and ($ensure == 'present')) {
 
       $patches.each | String $patch | {
         exec { "Verify ${patch}" :
