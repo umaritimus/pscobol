@@ -220,17 +220,41 @@ Function Invoke-CobolCompile {
             ${CompilePath} = "$(Split-Path ${Env:TEMP} -NoQualifier)\compile"
             ${SuccessString} = 'ALL the files compiled and linked successfully.'
 
-            ${ExitCode} = (
-                Start-Process `
-                    -FilePath "cmd.exe" `
-                    -ArgumentList ("/c cblbld.bat ${CompileDrive} ${CompilePath} ${Target}") `
-                    -WorkingDirectory "${Env:PS_HOME}\setup" `
-                    -Wait `
-                    -NoNewWindow `
-                    -RedirectStandardOutput "${LogFile}" `
-                    -PassThru
-            ).ExitCode
-            
+            If ((${Target} -eq 'PS_APP_HOME') -and (Test-Path -Path "${Env:PS_APP_HOME}\setup\cscblbld.bat")) {
+
+                ${script:PS_APP_HOME} = ${Env:PS_APP_HOME}
+
+                If ([bool]([System.Uri]${Env:PS_APP_HOME}).IsUnc) {
+                    New-Item -ItemType SymbolicLink -Path "${env:TEMP}\ps_app_home" -Target "${Env:PS_APP_HOME}"
+                    ${Env:PS_APP_HOME} = "${env:TEMP}\ps_app_home"
+                }
+
+                ${ExitCode} = (
+                    Start-Process `
+                        -FilePath "cmd.exe" `
+                        -ArgumentList ("/c cscblbld.bat ${CompileDrive} ${CompilePath} ${Target}") `
+                        -WorkingDirectory "${Env:PS_APP_HOME}\setup" `
+                        -Wait `
+                        -NoNewWindow `
+                        -RedirectStandardOutput "${LogFile}" `
+                        -PassThru
+                ).ExitCode
+
+                ${Env:PS_APP_HOME} = ${script:PS_APP_HOME}
+
+            } Else {
+                ${ExitCode} = (
+                    Start-Process `
+                        -FilePath "cmd.exe" `
+                        -ArgumentList ("/c cblbld.bat ${CompileDrive} ${CompilePath} ${Target}") `
+                        -WorkingDirectory "${Env:PS_HOME}\setup" `
+                        -Wait `
+                        -NoNewWindow `
+                        -RedirectStandardOutput "${LogFile}" `
+                        -PassThru
+                ).ExitCode
+            }
+
             If ((${ExitCode} -eq 0) -and (Select-String -Path "${LogFile}" -Pattern ${SuccessString} -Quiet -ErrorAction Stop)) {
                 Exit 0
             }

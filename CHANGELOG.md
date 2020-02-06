@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.1.0
+
+**Features**
+
+* Now compiles INAS cobol for PeopleSoft Campus Solutions
+
+> Note: the above has only been verified using image CS92U016 on PeopleTools 8.57.12 on Windows 2019
+
+**Bugfixes**
+
+**Known Issues**
+
+* Only works on `Windows`
+
 ## Release 1.0.4
 
 **Features**
