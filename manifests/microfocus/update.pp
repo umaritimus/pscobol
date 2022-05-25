@@ -43,6 +43,7 @@ class pscobol::microfocus::update (
           "),
           provider  => powershell,
           logoutput => true,
+          timeout   => 1200,
           require   => Exec["Verify ${patch}"],
           onlyif    => Sensitive(@("EOT")),
             Try {

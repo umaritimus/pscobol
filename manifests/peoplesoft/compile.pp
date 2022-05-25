@@ -128,6 +128,7 @@ class pscobol::peoplesoft::compile (
           "),
           provider  => powershell,
           logoutput => true,
+          timeout   => 600,
           require   => Exec['Verify PS_HOME/setup Path', 'Verify COBDIR/bin/cobol.exe Path', "Verify ${target}/src/cbl Path"],
           onlyif    => Sensitive(@("EOT")),
             Try {

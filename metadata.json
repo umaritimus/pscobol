@@ -1,6 +1,6 @@
 {
   "name": "umaritimus-pscobol",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": "umaritimus",
   "summary": "Puppet module for administering Micro Focus Visual Cobol for PeopleSoft systems",
   "license": "MIT",

@@ -41,6 +41,7 @@ class pscobol::microfocus::install (
         "),
         provider  => powershell,
         logoutput => true,
+        timeout   => 1200,
         require   => Exec['Verify Installation source'],
         creates   => ["${installdir}/bin/cobol.exe"],
         onlyif    => "If ('${package}' -ne '') { Exit 0 } Else { Exit 1 }"
@@ -57,6 +58,7 @@ class pscobol::microfocus::install (
         "),
         provider  => powershell,
         logoutput => true,
+        timeout   => 1200,
         require   => Exec['Verify Installation source'],
         onlyif    => Sensitive(@("EOT")),
           Try {

@@ -225,7 +225,7 @@ Function Invoke-CobolCompile {
                 ${script:PS_APP_HOME} = ${Env:PS_APP_HOME}
 
                 If ([bool]([System.Uri]${Env:PS_APP_HOME}).IsUnc) {
-                    New-Item -ItemType SymbolicLink -Path "${env:TEMP}\ps_app_home" -Target "${Env:PS_APP_HOME}"
+                    New-Item -ItemType SymbolicLink -Path "${env:TEMP}\ps_app_home" -Target "${Env:PS_APP_HOME}" -Force | Out-Null
                     ${Env:PS_APP_HOME} = "${env:TEMP}\ps_app_home"
                 }
 

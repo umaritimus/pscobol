@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.1.1
+
+**Features**
+
+**Bugfixes**
+
+* Increased cobol installation and compilation timeouts for large environments
+* Forced creation of a target symbolic link if symbolic link already exists by the same name
+
+**Known Issues**
+
+* Only works on `Windows`
+
 ## Release 1.1.0
 
 **Features**
