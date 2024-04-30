@@ -11,12 +11,10 @@ class pscobol::peoplesoft::compile (
   $ps_cust_home      =  undef,
   $targets           =  undef,
 ) {
-
   debug ("Ensure 'pscobol::peoplesoft::compile' to be '${ensure}' using '${installdir}' on '${targets}'")
 
-  if ($facts['operatingsystem'] == 'windows') {
+  if ($facts['os']['family'] == 'windows') {
     if (!empty($targets) and ($ensure == 'present')) {
-
       exec { 'Verify PS_HOME/setup Path' :
         command   => Sensitive(@("EOT")),
           If ('${ps_home}' -ne '') {
@@ -53,7 +51,6 @@ class pscobol::peoplesoft::compile (
       }
 
       $targets.each | String $target | {
-
         debug ("Compiling '${target}' cobol using '${installdir}'")
 
         exec { "Verify ${target} Environment Variable" :
@@ -117,7 +114,7 @@ class pscobol::peoplesoft::compile (
         }
 
         exec { "Compile ${target} cobol" :
-          command   => Sensitive("
+        command     => Sensitive("
             ${file('pscobol/pscobol.psm1')}
             Invoke-CobolCompile `
               -ps_home ${regsubst("\'${ps_home}\'", '(/|\\\\)', '\\', 'G')} `
@@ -145,8 +142,7 @@ class pscobol::peoplesoft::compile (
         }
       }
     }
-
   } else {
-    fail("Unsupported Platform - ${$facts['operatingsystem']}")
+    fail("Unsupported Platform - ${$facts['os']['family']}")
   }
 }

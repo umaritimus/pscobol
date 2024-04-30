@@ -24,7 +24,6 @@ class pscobol::peoplesoft (
   Optional[String]                $ps_cust_home      = $pscobol::params::ps_cust_home,
   Optional[Array[String[1]]]      $targets           = $pscobol::params::targets,
 ) inherits pscobol::params {
-
   debug ("Ensure 'pscobol::peoplesoft' to be '${ensure}' in '${targets}'")
 
   class { 'pscobol::peoplesoft::compile':
@@ -37,5 +36,4 @@ class pscobol::peoplesoft (
   }
 
   contain 'pscobol::peoplesoft::compile'
-
 }

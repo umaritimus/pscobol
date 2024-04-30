@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.2.0
+
+**Features**
+
+* Added support for Visual Cobol 9 on Windows 2022 using Puppet 8
+* Path to the license manager "lmpath" must be specified for license file installation
+
+**Bugfixes**
+
+**Known Issues**
+
+* Only works on `Windows`
+
 ## Release 1.1.1
 
 **Features**

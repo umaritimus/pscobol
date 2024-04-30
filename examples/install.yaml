@@ -1,7 +1,7 @@
 ---
 pscobol::ensure :        'present'
 pscobol::installdir :    'd:/cobol'
-pscobol::package :       '//share/vcbt_40.exe'
-pscobol::patches :       ['//share/vcbt_40_pu04_196223.exe']
-pscobol::license :       '//share/PS-VC-WIN-VSTUDIO.mflic'
+pscobol::package :       '//share/vcbtx64_90.exe'
+pscobol::lmpath:         'C:/Program Files (x86)/Micro Focus/Licensing/CesAdminTool.exe'
+pscobol::license :       '//share/Visual-COBOL-Windows-Visual-Studio-for-PeopleSoft.xml'
 pscobol::targets :       ['PS_HOME']

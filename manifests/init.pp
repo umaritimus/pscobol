@@ -9,14 +9,14 @@
 # @param installdir
 #   Micro Focus installation location, also COBDIR
 #
-# @param ensure
-#   Standard puppet ensure, e.g. present, absent, installed, etc
-#
 # @param package
 #   Location of the Micro Focus installer file
 #
 # @param patches
 #   Array of locations of patches for Micro Focus Visual Cobol
+#
+# @param lmpath
+#   Location of the Micro Focus License Manager
 #
 # @param license
 #   Micro Focus mflic license file location
@@ -41,18 +41,19 @@ class pscobol (
   Optional[String[1]]                                             $installdir   = $pscobol::params::installdir,
   Optional[String[1]]                                             $package      = $pscobol::params::package,
   Optional[Array[String[1]]]                                      $patches      = $pscobol::params::patches,
+  Optional[String[1]]                                             $lmpath       = $pscobol::params::lmpath,
   Optional[String[1]]                                             $license      = $pscobol::params::license,
   Optional[String[1]]                                             $ps_home      = $pscobol::params::ps_home,
   Optional[String[1]]                                             $ps_app_home  = $pscobol::params::ps_app_home,
   Optional[String[1]]                                             $ps_cust_home = $pscobol::params::ps_cust_home,
   Optional[Array[Enum['PS_HOME','PS_APP_HOME','PS_CUST_HOME']]]   $targets      = $pscobol::params::targets,
 ) inherits pscobol::params {
-
   class { 'pscobol::microfocus':
     ensure     => $ensure,
     installdir => $installdir,
     package    => $package,
     patches    => $patches,
+    lmpath     => $lmpath,
     license    => $license,
   }
 

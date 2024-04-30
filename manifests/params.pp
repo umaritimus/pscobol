@@ -5,13 +5,12 @@
 # @example
 #   include pscobol::params
 class pscobol::params {
-
   $ensure         = 'present'
   $ps_home        =  undef
   $ps_app_home    =  undef
   $ps_cust_home   =  undef
 
-  case $facts['operatingsystem'] {
+  case $facts['os']['family'] {
     'windows': {
       $installdir = 'C:/Program Files (x86)/Micro Focus/Visual COBOL'
       $lmpath     = 'C:/Program Files (x86)/Common Files/SafeNet Sentinel/Sentinel RMS License Manager/WinNT/CesAdminTool.exe'

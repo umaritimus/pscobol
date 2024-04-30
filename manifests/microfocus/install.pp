@@ -8,32 +8,30 @@ class pscobol::microfocus::install (
   $installdir   = undef,
   $package      = undef,
 ) {
-
   debug ("Ensure 'pscobol::microfocus::install' to be '${ensure}' using '${package}' on '${installdir}'")
 
-  if ($facts['operatingsystem'] == 'windows') {
-
+  if ($facts['os']['family'] == 'windows') {
     exec { 'Verify Installation source' :
       command   => Sensitive(@("EOT")),
-          Try {
-            If ( Test-Path -Path ${regsubst("\'${package}\'", '(/|\\\\)', '\\', 'G')} ) {
-              Exit 0
-            }
-            Exit 1
-          } Catch {
-            Exit 1
+        Try {
+          If ( Test-Path -Path ${regsubst("\'${package}\'", '(/|\\\\)', '\\', 'G')} ) {
+            Exit 0
           }
-          |-EOT
+          Exit 1
+        } Catch {
+          Exit 1
+        }
+        |-EOT
       provider  => powershell,
       logoutput => true,
-      onlyif    => "If ('${package}' -ne '') { Exit 0 } Else { Exit 1 }"
+      onlyif    => "If ('${package}' -ne '') { Exit 0 } Else { Exit 1 }",
     }
 
     if ($ensure == 'present') {
       debug ("Installing 'Microfocus Micro Focus Visual COBOL' using '${package}'")
 
       exec { 'Install Microfocus Micro Focus Visual COBOL' :
-        command   => Sensitive("
+      command     => Sensitive("
           ${file('pscobol/pscobol.psm1')}
           Install-MicroFocusVisualCobol `
             -Source ${regsubst("\'${package}\'", '(/|\\\\)', '\\', 'G')} `
@@ -44,13 +42,13 @@ class pscobol::microfocus::install (
         timeout   => 1200,
         require   => Exec['Verify Installation source'],
         creates   => ["${installdir}/bin/cobol.exe"],
-        onlyif    => "If ('${package}' -ne '') { Exit 0 } Else { Exit 1 }"
+        onlyif    => "If ('${package}' -ne '') { Exit 0 } Else { Exit 1 }",
       }
     } else {
       debug ("Removing 'Microfocus Micro Focus Visual COBOL' using '${package}'")
 
       exec { 'Remove Microfocus Micro Focus Visual COBOL' :
-        command   => Sensitive("
+      command     => Sensitive("
           ${file('pscobol/pscobol.psm1')}
           Uninstall-MicroFocusVisualCobol `
             -Source ${regsubst("\'${package}\'", '(/|\\\\)', '\\', 'G')} `
@@ -74,8 +72,7 @@ class pscobol::microfocus::install (
           |-EOT
       }
     }
-
   } else {
-    fail("Unsupported Platform - ${$facts['operatingsystem']}")
+    fail("Unsupported Platform - ${$facts['os']['family']}")
   }
 }

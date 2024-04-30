@@ -15,17 +15,15 @@
 #
 # @example
 #   include pscobol::microfocus
-class pscobol::microfocus  (
+class pscobol::microfocus (
   Enum['present','absent']        $ensure            = $pscobol::params::ensure,
   Optional[String]                $installdir        = $pscobol::params::installdir,
   Optional[String]                $package           = $pscobol::params::package,
   Optional[Array[String[1]]]      $patches           = $pscobol::params::patches,
+  Optional[String]                $lmpath            = $pscobol::params::lmpath,
   Optional[String]                $license           = $pscobol::params::license,
 ) inherits pscobol::params {
-
   debug ("Ensure 'pscobol::microfocus' to be '${ensure}' in '${installdir}'")
-
-  $lmpath = $pscobol::params::lmpath
 
   class { 'pscobol::microfocus::install':
     ensure     => $ensure,
@@ -54,5 +52,4 @@ class pscobol::microfocus  (
   } else {
     Class['pscobol::microfocus::license'] -> Class['pscobol::microfocus::install']
   }
-
 }

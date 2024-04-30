@@ -127,10 +127,13 @@ Function Set-MicroFocusVisualCobolLicense {
                 Remove-Item -Path "${LogFile}" -Force
             }
 
+            Get-ChildItem ${Source} | `
+                Copy-Item -Destination "${Env:TEMP}\vcbt_license.xml" -Force
+
             ${InstallExitCode} = (
                 Start-Process `
                     -FilePath "${CesAdminToolPath}" `
-                    -ArgumentList ( "-term install", "-f ${Source}" ) `
+                    -ArgumentList ( "-term install", "-f '${Env:TEMP}\vcbt_license.xml'" ) `
                     -Wait `
                     -NoNewWindow `
                     -PassThru
