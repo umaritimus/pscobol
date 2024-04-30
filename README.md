@@ -73,12 +73,12 @@ For additional usage, please see [/examples/ in the source repository](https://g
 ## Limitations
 
 * Module `pscobol` was only tested for deployment of `Micro Focus Visual Cobol Built Tools`, but should work for others...
-* It is known to work on `Microsoft Windows 2019` server platform, but should work on `Microsoft Windows 2016` and `Mirosoft Windows 10`
-* This module was only tested on `Puppet 5.5.*`
+* It is known to work on `Microsoft Windows Server` platform, but should work on `Mirosoft Windows 10` and `Mirosoft Windows 11`
+* This module was tested on `Puppet 8.6.*`
 
 ## Development
 
-* Module `pscobol` was developed using `PDK 1.15` on Windows OS.
+* Module `pscobol` was developed using `PDK 3.0` on Windows OS.
 * It's released under an open MIT license. So, please feel free ot use it freely.
 * Please do send the Pull Requests to add functionality for other platforms.
 
