@@ -133,7 +133,7 @@ Function Set-MicroFocusVisualCobolLicense {
             ${InstallExitCode} = (
                 Start-Process `
                     -FilePath "${CesAdminToolPath}" `
-                    -ArgumentList ( "-term install", "-f '${Env:TEMP}\vcbt_license.xml'" ) `
+                    -ArgumentList ( '-term', 'install', '-f', "${Env:TEMP}\vcbt_license.xml" ) `
                     -Wait `
                     -NoNewWindow `
                     -PassThru
@@ -144,7 +144,7 @@ Function Set-MicroFocusVisualCobolLicense {
                 ${ListExitCode} = (
                     Start-Process `
                         -FilePath "${CesAdminToolPath}" `
-                        -ArgumentList ( "-term list" ) `
+                        -ArgumentList ( '-term', 'list' ) `
                         -Wait `
                         -NoNewWindow `
                         -RedirectStandardOutput "${LogFile}" `

@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.2.2
+
+**Features**
+
+* Path to the license could now be specified as a UNC location
+
+**Bugfixes**
+
+**Known Issues**
+
+
 ## Release 1.2.1
 
 **Features**
