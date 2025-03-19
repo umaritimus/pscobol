@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.2.3
+
+**Features**
+
+* Change powershell to pwsh provider for wider compatibility
+* Allow null target for cobol compilation
+
+**Bugfixes**
+
+**Known Issues**
+
+
 ## Release 1.2.2
 
 **Features**

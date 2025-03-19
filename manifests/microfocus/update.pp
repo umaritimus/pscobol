@@ -24,7 +24,7 @@ class pscobol::microfocus::update (
               Exit 1
             }
             |-EOT
-          provider  => powershell,
+          provider  => pwsh,
           logoutput => true,
           onlyif    => "If ('${patch}' -ne '') { Exit 0 } Else { Exit 1 }",
         }
@@ -38,7 +38,7 @@ class pscobol::microfocus::update (
               -Source ${regsubst("\'${patch}\'", '(/|\\\\)', '\\', 'G')} `
               -InstallDir ${regsubst("\'${installdir}\'", '(/|\\\\)', '\\', 'G')}
           "),
-          provider  => powershell,
+          provider  => pwsh,
           logoutput => true,
           timeout   => 1200,
           require   => Exec["Verify ${patch}"],

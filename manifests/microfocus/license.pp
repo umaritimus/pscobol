@@ -22,7 +22,7 @@ class pscobol::microfocus::license (
           Exit 1
         }
         |-EOT
-      provider  => powershell,
+      provider  => pwsh,
       logoutput => true,
       onlyif    => "If ('${license}' -ne '') { Exit 0 } Else { Exit 1 }",
     }
@@ -35,7 +35,7 @@ class pscobol::microfocus::license (
             -Source ${regsubst("\'${license}\'", '(/|\\\\)', '\\', 'G')} `
             -CesAdminToolPath ${regsubst("\'${lmpath}\'", '(/|\\\\)', '\\', 'G')}
         "),
-        provider  => powershell,
+        provider  => pwsh,
         logoutput => true,
         require   => Exec['Verify License source'],
         onlyif    => Sensitive(@("EOT")),
@@ -54,7 +54,7 @@ class pscobol::microfocus::license (
     } else {
       exec { 'Remove Sentinel RMS License Manager' :
         command   => Sensitive('cmd /c "MsiExec.exe/X{A6C99F57-4EAE-4A25-898D-EFD9AF3DA23D} /quiet"'),
-        provider  => powershell,
+        provider  => pwsh,
         logoutput => true,
         onlyif    => Sensitive(@("EOT")),
           Try {

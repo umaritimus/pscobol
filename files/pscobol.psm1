@@ -223,7 +223,9 @@ Function Invoke-CobolCompile {
             ${CompilePath} = "$(Split-Path ${Env:TEMP} -NoQualifier)\compile"
             ${SuccessString} = 'ALL the files compiled and linked successfully.'
 
-            If ((${Target} -eq 'PS_APP_HOME') -and (Test-Path -Path "${Env:PS_APP_HOME}\setup\cscblbld.bat")) {
+            If (-Not ${Target}) {
+                Exit 0
+            } ElseIf ((${Target} -eq 'PS_APP_HOME') -and (Test-Path -Path "${Env:PS_APP_HOME}\setup\cscblbld.bat")) {
 
                 ${script:PS_APP_HOME} = ${Env:PS_APP_HOME}
 

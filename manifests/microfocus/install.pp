@@ -22,7 +22,7 @@ class pscobol::microfocus::install (
           Exit 1
         }
         |-EOT
-      provider  => powershell,
+      provider  => pwsh,
       logoutput => true,
       onlyif    => "If ('${package}' -ne '') { Exit 0 } Else { Exit 1 }",
     }
@@ -37,7 +37,7 @@ class pscobol::microfocus::install (
             -Source ${regsubst("\'${package}\'", '(/|\\\\)', '\\', 'G')} `
             -InstallDir ${regsubst("\'${installdir}\'", '(/|\\\\)', '\\', 'G')}
         "),
-        provider  => powershell,
+        provider  => pwsh,
         logoutput => true,
         timeout   => 1200,
         require   => Exec['Verify Installation source'],
@@ -54,7 +54,7 @@ class pscobol::microfocus::install (
             -Source ${regsubst("\'${package}\'", '(/|\\\\)', '\\', 'G')} `
             -InstallDir ${regsubst("\'${installdir}\'", '(/|\\\\)', '\\', 'G')}
         "),
-        provider  => powershell,
+        provider  => pwsh,
         logoutput => true,
         timeout   => 1200,
         require   => Exec['Verify Installation source'],

@@ -27,7 +27,7 @@ class pscobol::peoplesoft::compile (
             }
           }
           |- EOT
-        provider  => powershell,
+        provider  => pwsh,
         logoutput => true,
       }
 
@@ -46,7 +46,7 @@ class pscobol::peoplesoft::compile (
             }
           }
           |- EOT
-        provider  => powershell,
+        provider  => pwsh,
         logoutput => true,
       }
 
@@ -59,7 +59,7 @@ class pscobol::peoplesoft::compile (
               Throw 'The Environment variable ${target} must be declared'
             }
             |- EOT
-          provider  => powershell,
+          provider  => pwsh,
           logoutput => true,
           require   => Exec['Verify PS_HOME/setup Path'],
           onlyif    => Sensitive(@("EOT")),
@@ -108,7 +108,7 @@ class pscobol::peoplesoft::compile (
               }
             }
             |- EOT
-          provider  => powershell,
+          provider  => pwsh,
           logoutput => true,
           require   => Exec['Verify PS_HOME/setup Path', "Verify ${target} Environment Variable"],
         }
@@ -123,7 +123,7 @@ class pscobol::peoplesoft::compile (
               -cobroot ${regsubst("\'${installdir}\'", '(/|\\\\)', '\\', 'G')} `
               -Target ${target}
           "),
-          provider  => powershell,
+          provider  => pwsh,
           logoutput => true,
           timeout   => 600,
           require   => Exec['Verify PS_HOME/setup Path', 'Verify COBDIR/bin/cobol.exe Path', "Verify ${target}/src/cbl Path"],
